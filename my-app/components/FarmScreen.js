@@ -6,10 +6,49 @@ import {
   Button,
   Image,
   ImageBackground,
+  FlatList,
+  Pressable,
 } from "react-native";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase.js";
 
-function FarmScreen({ prop }) {
+const FarmScreen = () => {
+  const [farms, setFarms] = useState([]);
+  const ref = db.collection("farms");
+
+  useEffect(() => {
+    ref.onSnapshot(async (querySnapshot) => {
+      const farms = [];
+      querySnapshot.forEach((doc) => {
+        const { mail, name, adress, description, phone} = doc.data();
+
+        let adress1 = [];
+        let count = 0
+        for (let i = 0; i < adress.length; i++) {
+            const element = adress[i];
+            adress1.push(adress[i]);
+            if (count == 0) {
+                adress1.push(", ");
+            } else {
+                adress1.push(" ");
+            }
+            count++
+        }
+        JSON.stringify(adress1);
+    
+        farms.push({
+          id: doc.id,
+          name,
+          mail,
+          adress1, 
+          description, 
+          phone
+        });
+      });
+      setFarms(farms);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image
@@ -19,10 +58,66 @@ function FarmScreen({ prop }) {
       />
 
       <View>
-        <Text style={styles.text}>Blablabla...</Text>
-        <Text style={styles.text}>Adresse: </Text>
-        <Text style={styles.text}>Mail: </Text>
-        <Text style={styles.text}>Tlf. nr: </Text>
+        <View style={styles.flatlistContainer}>
+          <FlatList
+            data={farms}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <Text style={styles.text}>{item.name}</Text>
+            )}
+          ></FlatList>
+        </View>
+        
+        <View style={styles.flatlistContainerDescription}>
+          <FlatList
+            data={farms}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <Text style={styles.text}>{item.description}</Text>
+            )}
+          ></FlatList>
+        </View>
+
+        <View style={styles.flatlistContainer}>
+          <Text style={styles.text}>Adresse: </Text>
+          <FlatList
+            data={farms}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <Text style={styles.text}>{item.adress1}</Text>
+            )}
+          ></FlatList>
+        </View>
+
+        <View style={styles.flatlistContainer}>
+          <Text style={styles.text}>Mail: </Text>
+          <FlatList
+            data={farms}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <Text style={styles.text}>{item.mail}</Text>
+            )}
+          ></FlatList>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            width: "100%",
+            maxHeight: 50,
+          }}
+        >
+          <Text style={styles.text}>Tlf. nr.: </Text>
+          <FlatList
+            data={farms}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <Text style={styles.text}>{item.phone}</Text>
+            )}
+          ></FlatList>
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -31,16 +126,18 @@ function FarmScreen({ prop }) {
       </View>
     </View>
   );
-}
+};
 export default FarmScreen;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
+    alignItems: "center",
+    marginTop: 0,
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     marginBottom: "5%",
   },
   image: {
@@ -54,7 +151,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
-  button: {
-
+  flatlistContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    maxHeight: 50,
   },
+  flatlistContainerDescription: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    maxHeight: 75,
+  }
 });

@@ -6,6 +6,7 @@ import DetailsScreen from './components/DetailsScreen';
 import HomeScreen from './components/HomeScreen';
 import SettingsScreen from './components/SettingsScreen';
 import FarmScreen from './components/FarmScreen';
+import FarmProductScreen from './components/FarmProductScreen';
 import LoginScreen from './components/LoginScreen';
 
 
@@ -21,6 +22,7 @@ export default function App() {
         <Tab.Screen name="Settings" component={SettingsScreen} />
         <Tab.Screen name="Details" component={DetailsScreen} />
         <Tab.Screen options={ {headerShown: false} } name="Farm" component={FarmScreen} />
+        <Tab.Screen options={ {headerShown: false} } name="FarmProducts" component={FarmProductScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
