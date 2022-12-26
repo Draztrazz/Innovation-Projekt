@@ -1,11 +1,27 @@
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import * as React from "react";
+import { auth } from "../firebase";
+import { useNavigation } from "@react-navigation/core";
 
-//HomeScreen komponenten tager en prop med og printer indholdet af denne i en <Text/>
-function HomeScreen({prop}) {
+
+const HomeScreen =() => {
+    const navigation = useNavigation()
+    const handleSignOut = () =>{
+        auth
+            .signOut()
+            .then(() => {
+                navigation.navigate("Login")
+                console.log("Signed out")
+            })
+            .catch(error => alert(error.message))
+    }
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>{prop}</Text>
+            <Text>Email: {auth.currentUser?.email}</Text>
+            <TouchableOpacity style={styles.button}
+            onPress={handleSignOut}>
+                <Text style={styles.butonText}>Sign Out</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -14,8 +30,6 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
     container: {
-        borderColor: 'red',
-        borderWidth: 20,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -24,4 +38,18 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
     },
+    button:{
+        backgroundColor:"#0782F9",
+        width: "60%",
+        padding:15,
+        borderRadius:10,
+        alignItems:"center",
+        marginTop: 40,
+    },
+    buttonText:{
+        color:"white",
+        fontWeight:"700",
+        fontSize:16,
+      }
+
 });

@@ -21,31 +21,30 @@ const FarmProductScreen = () => {
         const { name, products } = doc.data();
 
         let productNames = [];
+        let productPrice = [];
         let object = {};
         let count = 1;
         for (let i = 0; i < Object.keys(products).length; i++) {
-          for (let j = 0; j < Object.entries(products[count]).length; j++) {
-            if (Object.entries(products[count])[j][0] === "name") {
-                
-              let value = Object.entries(products[count])[j][1];
-
-              productNames.push(value);
-              count++;
-            }
+            productNames.push(products[count].name)
+            productPrice.push(products[count].price)
+            count++;
             if (productNames.length === Object.keys(products).length) {
-              break;
-            }
-          }
+                break;
+              }
         }
-
-        //console.log("The final list is", productNames);
+        console.log("The final list is", productNames);
+        console.log("The final list is", productPrice);
 
         farms.push({
           id: doc.id,
           name,
+          products,
           productNames,
+          productPrice,
         });
       });
+      //console.log(farms)
+      //console.log(farms[0].products[1].name)
       setFarms(farms);
     });
   }, []);
@@ -68,7 +67,7 @@ const FarmProductScreen = () => {
           data={farms}
           numColumns={1}
           renderItem={({ item }) => (
-            <Text style={styles.text}>{item.productNames}</Text>
+            <Text style={styles.text}>Produkt: {item.productNames[0]} - Pris: {item.productPrice[0]}</Text>
           )}
         ></FlatList>
       </View>
